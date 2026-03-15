@@ -17,8 +17,9 @@ class MessageDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<MessageController>(
       builder: (context, controller, _) {
-        final message = controller.messages.where((m) => m.id == messageId).fold<
-            Message?>(null, (previousValue, element) => element);
+        final message = controller.messages
+            .where((m) => m.id == messageId)
+            .fold<Message?>(null, (previousValue, element) => element);
 
         if (message == null) {
           return Scaffold(

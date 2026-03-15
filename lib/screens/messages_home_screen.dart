@@ -84,6 +84,31 @@ class _MessagesHomeScreenState extends State<MessagesHomeScreen> {
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
+                child: Row(
+                  children: [
+                    FilterChip(
+                      label: Text(
+                        controller.onlyWithImages
+                            ? 'With image: ON'
+                            : 'With image: OFF',
+                      ),
+                      selected: controller.onlyWithImages,
+                      onSelected: controller.setOnlyWithImages,
+                    ),
+                    const SizedBox(width: 8),
+                    ActionChip(
+                      label: Text(
+                        controller.sortMode == SortMode.newestFirst
+                            ? 'Sort: Newest'
+                            : 'Sort: Oldest',
+                      ),
+                      onPressed: controller.toggleSortMode,
+                    ),
+                  ],
+                ),
+              ),
               if (controller.error != null)
                 Padding(
                   padding: const EdgeInsets.all(12),
@@ -101,48 +126,43 @@ class _MessagesHomeScreenState extends State<MessagesHomeScreen> {
                   child: controller.isLoading
                       ? const Center(child: CircularProgressIndicator())
                       : controller.messages.isEmpty
-                          ? _EmptyState(query: controller.searchQuery)
-                          : RefreshIndicator(
-                              onRefresh: controller.loadMessages,
-                              child: ListView.separated(
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                padding: const EdgeInsets.fromLTRB(
-                                  12,
-                                  12,
-                                  12,
-                                  110,
-                                ),
-                                itemCount: controller.messages.length,
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(height: 12),
-                                itemBuilder: (context, index) {
-                                  final message = controller.messages[index];
-                                  final selected = controller.selectedIds
-                                      .contains(message.id);
-                                  return MessageCard(
-                                    key: ValueKey(message.id),
-                                    message: message,
-                                    searchQuery: controller.searchQuery,
-                                    isSelectionMode:
-                                        controller.isSelectionMode,
-                                    isSelected: selected,
-                                    onLongPress: () {
-                                      if (!controller.isSelectionMode) {
-                                        controller.toggleSelectionMode(true);
-                                      }
-                                      if (message.id != null) {
-                                        controller.toggleSelected(message.id!);
-                                      }
-                                    },
-                                    onTap: () => _handleTap(
-                                      context: context,
-                                      controller: controller,
-                                      message: message,
-                                    ),
-                                  );
+                      ? _EmptyState(query: controller.searchQuery)
+                      : RefreshIndicator(
+                          onRefresh: controller.loadMessages,
+                          child: ListView.separated(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding: const EdgeInsets.fromLTRB(12, 12, 12, 110),
+                            itemCount: controller.messages.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 12),
+                            itemBuilder: (context, index) {
+                              final message = controller.messages[index];
+                              final selected = controller.selectedIds.contains(
+                                message.id,
+                              );
+                              return MessageCard(
+                                key: ValueKey(message.id),
+                                message: message,
+                                searchQuery: controller.searchQuery,
+                                isSelectionMode: controller.isSelectionMode,
+                                isSelected: selected,
+                                onLongPress: () {
+                                  if (!controller.isSelectionMode) {
+                                    controller.toggleSelectionMode(true);
+                                  }
+                                  if (message.id != null) {
+                                    controller.toggleSelected(message.id!);
+                                  }
                                 },
-                              ),
-                            ),
+                                onTap: () => _handleTap(
+                                  context: context,
+                                  controller: controller,
+                                  message: message,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                 ),
               ),
             ],
@@ -237,10 +257,7 @@ class _ConnectivityBanner extends StatelessWidget {
         isOnline
             ? 'ONLINE - sharing available'
             : 'OFFLINE - local message features still work',
-        style: const TextStyle(
-          fontWeight: FontWeight.w800,
-          letterSpacing: 0.5,
-        ),
+        style: const TextStyle(fontWeight: FontWeight.w800, letterSpacing: 0.5),
       ),
     );
   }

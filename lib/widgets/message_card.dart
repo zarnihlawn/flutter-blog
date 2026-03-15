@@ -43,10 +43,7 @@ class MessageCard extends StatelessWidget {
               margin: const EdgeInsets.only(left: 7, top: 7),
               decoration: BoxDecoration(
                 color: brutalShadowColor,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 3,
-                ),
+                border: Border.all(color: Colors.black, width: 3),
               ),
             ),
           ),
@@ -63,10 +60,7 @@ class MessageCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (isSelectionMode) ...[
-                      Checkbox(
-                        value: isSelected,
-                        onChanged: (_) => onTap(),
-                      ),
+                      Checkbox(value: isSelected, onChanged: (_) => onTap()),
                       const SizedBox(width: 8),
                     ],
                     Expanded(
@@ -92,8 +86,9 @@ class MessageCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            DateFormat('dd MMM yyyy - HH:mm')
-                                .format(message.updatedAt),
+                            DateFormat(
+                              'dd MMM yyyy - HH:mm',
+                            ).format(message.updatedAt),
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
@@ -133,12 +128,7 @@ TextSpan _buildHighlightedText({
   while (true) {
     final matchIndex = lowerSource.indexOf(lowerQuery, start);
     if (matchIndex == -1) {
-      spans.add(
-        TextSpan(
-          text: source.substring(start),
-          style: defaultStyle,
-        ),
-      );
+      spans.add(TextSpan(text: source.substring(start), style: defaultStyle));
       break;
     }
 

@@ -45,9 +45,11 @@ class Message {
       id: map['id'] as int?,
       content: map['content'] as String? ?? '',
       imagePath: map['image_path'] as String?,
-      createdAt: DateTime.tryParse(map['created_at'] as String? ?? '') ??
+      createdAt:
+          DateTime.tryParse(map['created_at'] as String? ?? '') ??
           DateTime.now(),
-      updatedAt: DateTime.tryParse(map['updated_at'] as String? ?? '') ??
+      updatedAt:
+          DateTime.tryParse(map['updated_at'] as String? ?? '') ??
           DateTime.now(),
     );
   }

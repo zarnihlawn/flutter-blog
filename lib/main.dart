@@ -14,9 +14,9 @@ void main() {
       providers: [
         Provider<MessageRepository>(create: (_) => MessageRepository()),
         ChangeNotifierProvider<MessageController>(
-          create: (context) => MessageController(
-            repository: context.read<MessageRepository>(),
-          )..initialize(),
+          create: (context) =>
+              MessageController(repository: context.read<MessageRepository>())
+                ..initialize(),
         ),
       ],
       child: const BlogApp(),

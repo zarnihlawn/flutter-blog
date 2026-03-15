@@ -3,16 +3,13 @@ import 'database_service.dart';
 
 class MessageRepository {
   MessageRepository({DatabaseService? databaseService})
-      : _databaseService = databaseService ?? DatabaseService.instance;
+    : _databaseService = databaseService ?? DatabaseService.instance;
 
   final DatabaseService _databaseService;
 
   Future<List<Message>> getAllMessages() async {
     final db = await _databaseService.database;
-    final rows = await db.query(
-      'messages',
-      orderBy: 'updated_at DESC',
-    );
+    final rows = await db.query('messages', orderBy: 'updated_at DESC');
     return rows.map(Message.fromMap).toList();
   }
 
@@ -62,11 +59,7 @@ class MessageRepository {
 
   Future<int> deleteMessage(int id) async {
     final db = await _databaseService.database;
-    return db.delete(
-      'messages',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return db.delete('messages', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> deleteMessages(List<int> ids) async {

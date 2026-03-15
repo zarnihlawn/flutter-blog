@@ -9,9 +9,11 @@ import 'package:share_plus/share_plus.dart';
 import '../data/message_repository.dart';
 import '../models/message.dart';
 
+enum SortMode { newestFirst, oldestFirst }
+
 class MessageController extends ChangeNotifier {
   MessageController({required MessageRepository repository})
-      : _repository = repository;
+    : _repository = repository;
 
   final MessageRepository _repository;
   final ImagePicker _imagePicker = ImagePicker();
@@ -23,6 +25,8 @@ class MessageController extends ChangeNotifier {
   final Set<int> _selectedIds = <int>{};
   String? _error;
   bool _isOnline = true;
+  SortMode _sortMode = SortMode.newestFirst;
+  bool _onlyWithImages = false;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   List<Message> get messages => _messages;
@@ -32,6 +36,8 @@ class MessageController extends ChangeNotifier {
   String get searchQuery => _searchQuery;
   String? get error => _error;
   bool get isOnline => _isOnline;
+  SortMode get sortMode => _sortMode;
+  bool get onlyWithImages => _onlyWithImages;
 
   Future<void> initialize() async {
     await _observeConnectivity();
@@ -56,9 +62,10 @@ class MessageController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _messages = _searchQuery.trim().isEmpty
+      final loaded = _searchQuery.trim().isEmpty
           ? await _repository.getAllMessages()
           : await _repository.searchMessages(_searchQuery);
+      _messages = _applySortAndFilter(loaded);
     } catch (_) {
       _error = 'Unable to load messages from the local database.';
     } finally {
@@ -116,6 +123,18 @@ class MessageController extends ChangeNotifier {
     unawaited(loadMessages());
   }
 
+  void toggleSortMode() {
+    _sortMode = _sortMode == SortMode.newestFirst
+        ? SortMode.oldestFirst
+        : SortMode.newestFirst;
+    unawaited(loadMessages());
+  }
+
+  void setOnlyWithImages(bool value) {
+    _onlyWithImages = value;
+    unawaited(loadMessages());
+  }
+
   void toggleSelectionMode([bool? value]) {
     _isSelectionMode = value ?? !_isSelectionMode;
     if (!_isSelectionMode) {
@@ -136,7 +155,9 @@ class MessageController extends ChangeNotifier {
   void selectAllVisible() {
     _selectedIds
       ..clear()
-      ..addAll(_messages.where((message) => message.id != null).map((e) => e.id!));
+      ..addAll(
+        _messages.where((message) => message.id != null).map((e) => e.id!),
+      );
     notifyListeners();
   }
 
@@ -179,10 +200,7 @@ class MessageController extends ChangeNotifier {
       }
     }
     await SharePlus.instance.share(
-      ShareParams(
-        text: text,
-        title: 'Share message',
-      ),
+      ShareParams(text: text, title: 'Share message'),
     );
   }
 
@@ -190,5 +208,19 @@ class MessageController extends ChangeNotifier {
   void dispose() {
     _connectivitySubscription?.cancel();
     super.dispose();
+  }
+
+  List<Message> _applySortAndFilter(List<Message> source) {
+    final filtered = _onlyWithImages
+        ? source.where((m) => (m.imagePath ?? '').isNotEmpty).toList()
+        : List<Message>.from(source);
+
+    filtered.sort((a, b) {
+      if (_sortMode == SortMode.newestFirst) {
+        return b.updatedAt.compareTo(a.updatedAt);
+      }
+      return a.updatedAt.compareTo(b.updatedAt);
+    });
+    return filtered;
   }
 }

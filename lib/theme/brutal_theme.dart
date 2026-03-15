@@ -7,12 +7,9 @@ ThemeData buildBrutalTheme() {
   const red = Color(0xFFE63946);
 
   OutlineInputBorder inputBorder(Color color) => OutlineInputBorder(
-        borderRadius: BorderRadius.zero,
-        borderSide: BorderSide(
-          color: color,
-          width: 3,
-        ),
-      );
+    borderRadius: BorderRadius.zero,
+    borderSide: BorderSide(color: color, width: 3),
+  );
 
   return ThemeData(
     colorScheme: const ColorScheme.light(
@@ -85,12 +82,8 @@ ThemeData buildBrutalTheme() {
         fontWeight: FontWeight.w900,
         letterSpacing: 0.8,
       ),
-      bodyLarge: TextStyle(
-        fontWeight: FontWeight.w600,
-      ),
-      bodyMedium: TextStyle(
-        fontWeight: FontWeight.w500,
-      ),
+      bodyLarge: TextStyle(fontWeight: FontWeight.w600),
+      bodyMedium: TextStyle(fontWeight: FontWeight.w500),
     ),
   );
 }

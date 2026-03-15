@@ -115,9 +115,7 @@ class _MessageEditorScreenState extends State<MessageEditorScreen> {
                           errorBuilder: (context, error, stackTrace) {
                             return const SizedBox(
                               height: 120,
-                              child: Center(
-                                child: Text('Image unavailable'),
-                              ),
+                              child: Center(child: Text('Image unavailable')),
                             );
                           },
                         ),
@@ -192,9 +190,9 @@ class _MessageEditorScreenState extends State<MessageEditorScreen> {
       if (!mounted) {
         return;
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Unable to save message.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Unable to save message.')));
     } finally {
       if (mounted) {
         setState(() => _isSaving = false);
