@@ -15,6 +15,11 @@ Use this file as submission evidence for development milestones.
 
 ## Checkpoint 2 - Outstanding Polish (to be added)
 
-- Commit hash: pending
-- Commit message: pending
-- Push confirmation: pending
+- Commit hash: `9a32471`
+- Commit message: `feat: add outstanding UX polish and evidence checklist`
+- Push confirmation:
+  - `9e6d3fd..9a32471  main -> main`
+- Evidence commands:
+  - `git show --stat 9a32471`
+  - `git log --oneline -5`
+  - `git status`
