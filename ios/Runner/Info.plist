@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera access is used to attach photos to blog messages.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo library access is used to attach images to blog messages.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Photo library access is used to save and share message images.</string>
 </dict>
 </plist>
